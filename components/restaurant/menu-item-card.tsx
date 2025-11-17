@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCartStore } from '@/lib/store/cart-store';
+import { useToast } from '@/components/ui/toast';
 
 interface MenuItemCardProps {
   item: MenuItem;
@@ -15,6 +16,7 @@ interface MenuItemCardProps {
 
 export function MenuItemCard({ item, restaurant }: MenuItemCardProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const { showToast } = useToast();
 
   const handleAddToCart = () => {
     addItem({
@@ -22,6 +24,7 @@ export function MenuItemCard({ item, restaurant }: MenuItemCardProps) {
       quantity: 1,
       restaurant,
     });
+    showToast(`${item.name} added to cart`, 'success');
   };
 
   return (

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { CartItem } from '@/types';
 
 interface CartStore {
@@ -12,8 +13,10 @@ interface CartStore {
   getItemCount: () => number;
 }
 
-export const useCartStore = create<CartStore>((set, get) => ({
-  items: [],
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
 
   addItem: (item) => set((state) => {
     const existingItem = state.items.find(
@@ -65,4 +68,10 @@ export const useCartStore = create<CartStore>((set, get) => ({
     const state = get();
     return state.items.reduce((count, item) => count + item.quantity, 0);
   },
-}));
+    }),
+    {
+      name: 'cart-storage',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
